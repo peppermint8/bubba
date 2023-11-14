@@ -1,0 +1,393 @@
+game_name: Bubba the Beholder
+author: a Xarnoz Production
+map: test-map.txt
+map_size: [100,50]
+intro_text: |
+  You are Bubba the beholder, a green menace.  
+  Kill 'em all and let god sort them out.
+  I should ask AI to write the intro story.
+
+
+  ENTER to play.  ESC to quit.
+
+  (C) 2023, a Xarnoz Production
+
+
+#player_start: [27,3]
+player_start: [4,4]
+player_dead_img: resources/death.png
+
+# set these so default is set to bubba.false
+spells:
+  - heal
+  - mana
+  - vision
+  - water
+  - lava
+  - lightning
+  - fireball
+  - invisible
+
+# death.png
+# fire.png
+
+traps:
+  fire_trap:
+    glyph: 1
+    damage: 15
+    special: fire_trap
+    # image: resources/?
+
+  ice_trap:
+    glyph: 2
+    damage: 25
+    special: ice_trap
+
+treasure:
+  ring:
+    glyph: a
+    value: 100
+    image: resources/magic-ring.png
+    text: You have a fireball spell
+    special: fireball
+
+  crown:
+    glyph: b
+    value: 10000
+    image: resources/crown.png
+
+  ruby:
+    glyph: r
+    value: 200
+    image: resources/ruby.png
+
+  diamond:
+    glyph: d
+    value: 500
+    image: resources/diamond.png
+    scale: 0.8
+
+  chalace:
+    glyph: e
+    value: 250
+    image: resources/chalace.png
+
+  chest: 
+    glyph: c
+    value: 500
+    image: resources/chest.png
+
+  vision_spellbook:
+     glyph: v
+     value: 0
+     image: resources/spellbook.png
+     special: vision
+     text: You can see hidden stuff
+
+  water_spellbook:
+     glyph: w
+     value: 0
+     image: resources/spellbook.png
+     special: water
+     text: You can levitate over water
+
+  fog_spellbook:
+     glyph: f
+     value: 0
+     image: resources/spellbook2.png
+     special: fog
+     text: Your vision has improved
+
+  lava_scroll:
+     glyph: h
+     special: lava
+     value: 0
+     image: resources/parchment.png
+     text: You can levitate over lava
+
+  health_potion:
+    glyph: g
+    value: 0
+    image: resources/red-potion.png
+    special: heal
+    text: Your health is refilled
+
+  mana_potion:
+    glyph: m
+    value: 0
+    image: resources/purple-potion.png
+    special: mana
+    text: Your mana is refilled
+
+  zirconia:
+    glyph: z
+    value: 50
+    image: resources/zirconia.png
+    scale: 0.75
+
+  magic_ring:
+    glyph: l
+    value: 0
+    image: resources/magic-ring-2.png
+    special: lightning
+    text: You have a lightning spell
+
+  invisible_ring:
+    glyph: y
+    value: 0
+    image: resources/magic-ring-3.png
+    special: invisible
+    text: You have a invisibility spell
+
+  key_1:
+    glyph: k
+    value: 0
+    image: resources/key.png
+    special: key
+    scale: 0.5
+
+  treasure:
+    glyph: j
+    value: 250
+    image: resources/treasure.png
+
+  crystal:
+    glyph: u
+    value: 150
+    image: resources/crystal.png
+    special: speed_increase
+    text: You can move faster
+
+  jewellery:
+    glyph: q
+    value: 50
+    image: resources/jewellery.png
+
+  sword:
+    glyph: z
+    value: 5000
+    image: resources/sword.png
+
+  idol:
+    glyph: i
+    value: 1000
+    image: resources/tiki.png
+    special: mana_increase
+    text: Your maximum mana has increased
+
+  idol2:
+    glyph: o
+    value: 500
+    image: resources/tiki2.png
+    special: hp_increase
+    text: Your maximum health has increased
+
+  potion:
+    glyph: x
+    image: resources/potion.png
+    special: damage
+    text: Your damage has increased
+
+  beer:
+    glyph: n
+    image: resources/beer.png
+    value: 100
+    special: beer
+    text: Take off, eh!
+
+monsters:
+  fire:
+    glyph: F
+    speed: 4
+    energy: 300
+    hp: 50
+    dmg: 15
+    armor: 0
+    xp: 150
+    image: resources/fire.png
+    immune: fireball
+    weapon: fireball
+    attack_distance: 3 
+    attack_time: 15
+
+  mummy:
+    glyph: M
+    speed: 3
+    energy: 200
+    hp: 30
+    dmg: 6
+    armor: 0
+    xp: 50
+    image: resources/mummy.png
+    scale: 0.9
+    immune: lightning
+
+  wizard:
+    glyph: W
+    speed: 5
+    energy: 500
+    hp: 30
+    dmg: 8
+    armor: 0
+    xp: 100
+    image: resources/wizard.png
+    scale: 0.8
+    immune: lightning
+    weapon: lightning
+    attack_time: 20
+    attack_distance: 3 
+
+  slime:
+    glyph: V
+    speed: 1
+    energy: 500
+    hp: 10
+    dmg: 3
+    armor: 0
+    xp: 10
+    image: resources/slime.png
+    scale: 0.8
+    attack_distance: 5
+    immune: acid
+    weapon: acid
+
+  goblin:
+    glyph: A
+    speed: 3
+    energy: 100
+    hp: 6
+    armor: 0
+    xp: 6
+    image: resources/goblin.png
+    scale: 0.5
+    attack_distance: 3 
+    weapon: arrow
+    dmg: 6
+    attack_time: 20
+
+  orc:
+    glyph: B
+    hp: 8
+    speed: 2
+    energy: 150
+    dmg: 8
+    armor: 0
+    xp: 8
+    image: resources/orc.png
+    scale: 0.8
+
+
+  spider:
+    glyph: C
+    hp: 8
+    speed: 4
+    energy: 400
+    dmg: 6
+    armor: 0
+    xp: 8
+    image: resources/tarantula.png
+    scale: 0.5
+
+  dragon:
+    glyph: D
+    hp: 50
+    speed: 5
+    energy: 600
+    armor: 0.5
+    xp: 100
+    image: resources/dragon.png
+    scale: 2.0
+    weapon: fireball
+    dmg: 6
+    attack_time: 15
+    attack_distance: 4
+
+  ogre:
+    glyph: E
+    hp: 20
+    speed: 4
+    energy: 200
+    dmg: 10
+    armor: 0.1
+    xp: 40
+    image: resources/ogre.png
+    scale: 1.5
+
+  troll:
+    glyph: I
+    hp: 30
+    speed: 4
+    energy: 300
+    dmg: 12
+    armor: 0.2
+    xp: 40
+    image: resources/troll.png
+    scale: 1.25
+    attack_distance: 3
+    weapon: rock
+
+  bat:
+    glyph: G
+    hp: 6
+    speed: 5
+    energy: 300
+    dmg: 4
+    armor: 0
+    xp: 5
+    image: resources/bat.png
+    scale: 0.75
+    attack_distance: 0.75
+    attack_time: 18
+
+  demon:
+    glyph: H
+    hp: 80
+    speed: 4
+    energy: 500
+    dmg: 18
+    armor: 0.6
+    xp: 100
+    image: resources/devil.png
+    scale: 1.25
+    immune: fireball
+    weapon: fireball
+    attack_time: 20
+    attack_distance: 5
+
+  cthulhu:
+    glyph: J
+    hp: 50
+    speed: 5
+    energy: 500
+    dmg: 15
+    armor: 0.8
+    xp: 100
+    image: resources/cthulhu.png
+    scale: 1.25
+    immune: acid
+    weapon: lightning
+    attack_time: 20
+    attack_distance: 4
+
+  snake:
+    glyph: S
+    hp: 8
+    speed: 4
+    energy: 100
+    dmg: 5
+    xp: 15
+    image: resources/snake.png
+    attack_time: 21
+
+  succubus:
+    glyph: K
+    hp: 25
+    speed: 4
+    dmg: 10
+    energy: 150
+    xp: 25
+    image: resources/succubus.png
+    immune: acid
+    special: invisible
+
+
