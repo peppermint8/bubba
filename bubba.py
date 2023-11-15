@@ -458,12 +458,10 @@ def main(screen, screen_x, screen_y, dx, dy):
     
     fog_flag = True
 
-    background_color = convert_color("#000000")
-    #background_color = convert_color("#445544")
-    #gs = 25 # px
-    #gs = 15
-    gs = 35
-    gs = 55
+    background_color = map_json.get("background_color", convert_color("#000000"))
+  
+
+    gs = map_json.get("grid_size", 55)
 
     xrange = dx
     yrange = dy
@@ -479,21 +477,22 @@ def main(screen, screen_x, screen_y, dx, dy):
     bubba.av = 0.05 # angular velocity with rotation
     bubba.v = 5 # movement speed
     bubba.gs = gs
-    bubba.mana = 25
-    bubba.mana_max = 25
-    bubba.mana_rate = 0.1
-    bubba.hp = bubba.hp_max = 25
+    
+    bubba.mana_max = bubba.mana = map_json.get("player", {}).get("max_mana", 25)
+
+    bubba.mana_rate = map_json.get("player", {}).get("mana_regen_rate", 0.1)
+    bubba.hp = bubba.hp_max = map_json.get("player", {}).get("max_hit_points", 25)
     # 1 = acid
-    bubba.weapon_dmg_1 = [1,5]
-    bubba.mana_weapon_1 = 5
+    bubba.weapon_dmg_1 = map_json.get("player", {}).get("weapon_1_damage", [1,5])
+    bubba.mana_weapon_1 = map_json.get("player", {}).get("weapon_1_mana", 5)
     bubba.weapon_type_1 = "acid"
     # 2 = lightning
-    bubba.weapon_dmg_2 = [10,20]
-    bubba.mana_weapon_2 = 10
+    bubba.weapon_dmg_2 = map_json.get("player", {}).get("weapon_2_damage", [10,20])
+    bubba.mana_weapon_2 = map_json.get("player", {}).get("weapon_2_mana", 10)
     bubba.weapon_type_2 = "lightning"
     # 3 = fireball
-    bubba.weapon_dmg_3 = [20,40]
-    bubba.mana_weapon_3 = 20    
+    bubba.weapon_dmg_3 = map_json.get("player", {}).get("weapon_3_damage", [20,40])
+    bubba.mana_weapon_3 = map_json.get("player", {}).get("weapon_3_mana", 20)
     bubba.weapon_type_3 = "fireball"
     # 4 = ?
     
@@ -645,11 +644,11 @@ def main(screen, screen_x, screen_y, dx, dy):
     
     gold_list = []
     
-    beast_hit_range = gs // 2  # for bubba to hit
-    treasure_dist = gs // 2
+    beast_hit_range = gs // 2 # for bubba to hit
+    treasure_dist = gs // 2 # for pickup
 
     # random gold in the dungeon
-    for g in range(10):
+    for g in range(map_json.get("gold_coins", 50)):
         xb = yb = 0
         done = False
         while not done:
@@ -657,45 +656,46 @@ def main(screen, screen_x, screen_y, dx, dy):
             yb = random.randint(0, yrange-1)
             if dungeon[xb][yb] == 0:
                 done = True
-        #dungeon[xb][yb] = 4
+        
 
         gold = Player(0, gs*xb + xp, gs*yb + yp)
         gold.v = 0
         gold.xi = xb
         gold.yi = yb
         gold.gs = gs
-        gold.money = random.choice([5,10,25])
+        gold_val_list = map_json.get("gold_values", [5,10,25])
+        gold.money = random.choice(gold_val_list)
         gold_list.append(gold)
 
 
     game_font = pygame.font.SysFont('arial', 24)
+    status_font = pygame.font.SysFont('arial', 16) # hp, mana
     #game_font = pygame.font.Font('resources/CheyenneSans-Regular.ttf', 32)
 
-    teleport_sound = pygame.mixer.Sound("resources/teleport-90137.mp3")
-    shot_sound_1 = pygame.mixer.Sound("resources/mixkit-short-laser-gun-shot-1670.wav")
-    shot_sound_2 = pygame.mixer.Sound("resources/mixkit-fast-magic-game-spell-883.wav")
-    shot_sound_3 = pygame.mixer.Sound("resources/fire-spell-100276.mp3")
-    wall_sound = pygame.mixer.Sound("resources/mixkit-wood-hard-hit-2182.wav")
-    break_magic_sound = pygame.mixer.Sound("resources/mixkit-glass-break-with-hammer-thud-759.wav")
-    get_magic_sound = pygame.mixer.Sound("resources/sound-effect-twinklesparkle-115095.mp3")
-    get_treasure_sound = pygame.mixer.Sound("resources/mixkit-arcade-bonus-229.wav")
-    hit_beast_sound = pygame.mixer.Sound("resources/damage-40114.mp3") #metal-hit-84608.mp3
-    miss_beast_sound = pygame.mixer.Sound("resources/soul-steal-02-43483.mp3")
-    kill_beast_sound = pygame.mixer.Sound("resources/mixkit-enemy-death-voice-3168.wav")
-    hit_bubba_sound = pygame.mixer.Sound("resources/metal-hit-84608.mp3")
-    player_death_sound = pygame.mixer.Sound("resources/mixkit-enemy-death-voice-3168.wav") # better!
+
+    default_sound = "resources/mixkit-wood-hard-hit-2182.wav"
+
+    teleport_sound = pygame.mixer.Sound(map_json.get("sounds", {}).get("teleport", default_sound))
+    shot_sound_1 = pygame.mixer.Sound(map_json.get("sounds", {}).get("shot_1", default_sound))
+    shot_sound_2 = pygame.mixer.Sound(map_json.get("sounds", {}).get("shot_2", default_sound))
+    shot_sound_3 = pygame.mixer.Sound(map_json.get("sounds", {}).get("shot_3", default_sound))
+    wall_sound = pygame.mixer.Sound(map_json.get("sounds", {}).get("wall", default_sound))
+    break_magic_sound = pygame.mixer.Sound(map_json.get("sounds", {}).get("break_magic", default_sound))
+    get_magic_sound = pygame.mixer.Sound(map_json.get("sounds", {}).get("get_magic", default_sound))
+    get_treasure_sound = pygame.mixer.Sound(map_json.get("sounds", {}).get("get_treasure", default_sound))
+    hit_beast_sound = pygame.mixer.Sound(map_json.get("sounds", {}).get("hit_beast", default_sound))
+    miss_beast_sound = pygame.mixer.Sound(map_json.get("sounds", {}).get("miss_beast", default_sound))
+    kill_beast_sound = pygame.mixer.Sound(map_json.get("sounds", {}).get("kill_beast", default_sound))
+    hit_bubba_sound = pygame.mixer.Sound(map_json.get("sounds", {}).get("hit_player", default_sound))
+    player_death_sound = pygame.mixer.Sound(map_json.get("sounds", {}).get("player_death", default_sound))
 
     dead_scale = 1.1
     dead_img = pygame.image.load(map_json['player_dead_img']).convert_alpha()
     dead_img = pygame.transform.scale(dead_img, (gs * dead_scale, gs * dead_scale))
 
 
-
-    # hit monster
-    # kill monster
-
     score = 0
-    trapb = gs//4 # buffer for trap graphics
+    trapb = gs // 4 # padding for trap graphics
 
     # status bar
     bar_px = 200 # health, mana bar length
@@ -709,36 +709,39 @@ def main(screen, screen_x, screen_y, dx, dy):
     status_bar_flag = True
     status_bar_y = 50
     
-    done = False
-    pcolor = convert_color("#009900")
-    pcolor_inv = convert_color("#006600")
-    grid_clr = convert_color("#404060")
-    floor_clr = convert_color("#303060") 
-    floor_clr2 = convert_color("#202040")  # secrets
-    #dungeon_border_clr = convert_color("#0066dd")
-    dungeon_border_clr = convert_color("#303050")
-    water_clr = (0,128,255)
-    water_clr2 = (0,128,255)
-    lava_clr = (127, 104, 6)
-    lava_clr2 = (254, 169, 72)
-    door_clr = convert_color("#FFFFFF")
-    trap_clr = (255,0,0)
-    trap_inactive_clr = (90,99,90)
+    # colors
+    default_color = "#0000CC"
+    pcolor = map_json.get("colors", {}).get("player_color", default_color)
+    pcolor_inv = map_json.get("colors", {}).get("player_color_invisible", default_color)
+    grid_clr = map_json.get("colors", {}).get("grid_color", default_color)
+    wall_clr = map_json.get("colors", {}).get("wall_color", default_color)
+    secret_wall_clr = map_json.get("colors", {}).get("secret_wall_color", default_color)
+    dungeon_border_clr = map_json.get("colors", {}).get("dungeon_border_color", default_color)
+    water_clr = map_json.get("colors", {}).get("water_color", default_color)
+    water_clr2 = map_json.get("colors", {}).get("water_color_hilite", default_color)
+    lava_clr = map_json.get("colors", {}).get("lava_color", default_color)
+    lava_clr2 = map_json.get("colors", {}).get("lava_color_hilite", default_color)
+    door_clr = map_json.get("colors", {}).get("door_color", default_color)
+    trap_clr = map_json.get("colors", {}).get("trap_color", default_color)
+    trap_inactive_clr = map_json.get("colors", {}).get("trap_inactive_color", default_color)
 
-    lock_door_clr = convert_color("#FFFF44")
-    shot_clr = convert_color("#22FF22")
-    gold_clr = convert_color("#D4AF37")
-    lightning_clr = convert_color("#EEFF1B")
-    fire_clr = convert_color("#e25822")
-    fire_clr2 = convert_color("#FFFF99")
+
+    lock_door_clr = map_json.get("colors", {}).get("lock_door_color", default_color)
+    shot_clr = map_json.get("colors", {}).get("acid_color", default_color)
+    gold_clr = map_json.get("colors", {}).get("gold_color", default_color)
+    lightning_clr = map_json.get("colors", {}).get("lightning_color", default_color)
+    fire_clr = map_json.get("colors", {}).get("fire_color", default_color)
+    fire_clr2 = map_json.get("colors", {}).get("fire_color_hilite", default_color)
 
     # status bar stuff
-    status_clr = convert_color("#666699") 
-    text_clr = (255,255,255)
-    health_clr = convert_color("#bb0022") 
-    mana_clr = convert_color("#2211bb")
-    empty_clr = convert_color("#183018")
-    border_clr = convert_color("#F0F0F0")
+    status_clr = map_json.get("colors", {}).get("status_bar_background_color", default_color)
+    text_clr = map_json.get("colors", {}).get("status_bar_text_color", default_color)
+    health_clr = map_json.get("colors", {}).get("health_bar_color", default_color)
+    mana_clr = map_json.get("colors", {}).get("mana_bar_color", default_color)
+    empty_clr = map_json.get("colors", {}).get("empty_bar_color", default_color)
+    border_clr = map_json.get("colors", {}).get("status_bar_border_color", default_color)
+
+    # teleporter color not customizable yet ...
 
 
 
@@ -755,9 +758,10 @@ def main(screen, screen_x, screen_y, dx, dy):
     bubba.mana = bubba.mana_max
 
     t = 0 # clock ticks
-    grid_flag = True
+    grid_flag = map_json.get("show_grid", True)
     invisible_flag = False
-    
+    done = False
+
     # -----------------------------------------------[ loop ]
     
     while not done:
@@ -805,15 +809,15 @@ def main(screen, screen_x, screen_y, dx, dy):
 
                 if dungeon[x][y] == 1:
                     #pygame.draw.rect(bg, dclr, [x0, y0, gs-1, gs-1])
-                    fc = floor_clr
+                    fc = wall_clr
                     if x == 0 or y == 0 or x == dx-1 or y == dy-1:
                         fc = dungeon_border_clr
                         
                     pygame.draw.rect(bg, fc, [x0, y0, gs, gs])
                 elif dungeon[x][y] == 4:
-                    fc = floor_clr
+                    fc = wall_clr
                     if bubba.vision:
-                        fc = floor_clr2
+                        fc = secret_wall_clr
                 
                     pygame.draw.rect(bg, fc, [x0, y0, gs, gs])
 
@@ -859,7 +863,7 @@ def main(screen, screen_x, screen_y, dx, dy):
                         if tele.x == x and tele.y == y:
                             if tele.active:
                                 tc = tele.pulse
-                                # yellow
+                                # yellow - not customizable
                                 tele_clr = (tc, tc, 0)
                                 tele_clr2 = (255-tc, 255-tc, 0)
 
@@ -968,10 +972,10 @@ def main(screen, screen_x, screen_y, dx, dy):
                         elif trs.special == "key":
                             bubba.key_cnt += 1
                         elif trs.special == "mana_increase":
-                            bubba.mana_max = bubba.mana_max * 1.5
+                            bubba.mana_max = int(bubba.mana_max * 1.5)
                             
                         elif trs.special == "hp_increase":
-                            bubba.hp_max = bubba.hp_max * 1.5
+                            bubba.hp_max = int(bubba.hp_max * 1.5)
                             bubba.hp = bubba.hp_max
                         elif trs.special == "speed_increase":
                             bubba.v = bubba.v * 1.5
@@ -1396,19 +1400,28 @@ def main(screen, screen_x, screen_y, dx, dy):
             pygame.draw.rect(bg, health_clr, [15 + txt_xy[0] + txt_xy[2], txt_xy[1], h0, txt_xy[3]])
             pygame.draw.rect(bg, empty_clr, [15 + txt_xy[0] + txt_xy[2] + h0, txt_xy[1], h1, txt_xy[3]])
             pygame.draw.rect(bg, border_clr, [15 + txt_xy[0] + txt_xy[2], txt_xy[1], bar_px, txt_xy[3]], 2)
+            hp_txt = status_font.render(f"{bubba.hp} / {bubba.hp_max}", 1, text_clr)
+            txt_xy = hp_txt.get_rect(topleft=(hp_x+bar_px // 2, screen_y+txt_y+4))
+            bg.blit(hp_txt, txt_xy)
 
-        
             mana_text = game_font.render("Mana:", 1, text_clr)
-            txt_xy = mana_text.get_rect(topleft=(mana_x, screen_y+10))
+            txt_xy = mana_text.get_rect(topleft=(mana_x, screen_y+txt_y))
             bg.blit(mana_text, txt_xy) 
-            #mana_text = game_font.render(f"{bubba.mana} / {bubba.mana_max}", 1, (255,255,255,100))
-            #txt_xy = mana_text.get_rect(center=(500+15+200, screen_y + 10))
+
             m0 = bar_px * (max(bubba.mana,0) / bubba.mana_max)
             m1 = bar_px * (1 - max(bubba.mana,0) / bubba.mana_max)
             pygame.draw.rect(bg, mana_clr, [15 + txt_xy[0] + txt_xy[2], txt_xy[1], m0, txt_xy[3]])
             pygame.draw.rect(bg, empty_clr, [15 + txt_xy[0] + txt_xy[2] + m0, txt_xy[1], m1, txt_xy[3]])
             pygame.draw.rect(bg, border_clr, [15 + txt_xy[0] + txt_xy[2], txt_xy[1], bar_px, txt_xy[3]], 2)
-            # add 16/25 ?
+            
+            mana_txt = status_font.render(f"{int(bubba.mana)} / {bubba.mana_max}", 1, text_clr)
+            
+            #txt_xy = mana_txt.get_rect(topleft=(mana_x+bar_px //2, screen_y+txt_y+4))
+            txt_xy2 = mana_txt.get_rect() #topleft=(mana_x+bar_px //2, screen_y+txt_y+4))
+            print(txt_xy2)
+            txt_xy2[0] = (15 + txt_xy[0] + txt_xy[2])
+            txt_xy2[1] = screen_y + txt_y + 4
+            bg.blit(mana_txt, txt_xy2)
             #pygame.draw.rect(bg, (0,0,0), [txt_xy[0], txt_xy[1], txt_xy[2], txt_xy[3]])
             #bg.blit(mana_text, txt_xy)                                  
             #pygame.draw.rect(bg, (0,0,0), [15 + bubba.e_max + txt_xy[0] + txt_xy[2], txt_xy[1], bubba.mana_max - bubba.mana - e1, txt_xy[3]])
@@ -1841,10 +1854,10 @@ if __name__ == '__main__':
     # full screen option
     screen, screen_x, screen_y = init_screen()
 
-    #main(screen, screen_x, screen_y, dx, dy)
-    #pygame.quit()
+    main(screen, screen_x, screen_y, dx, dy)
+    pygame.quit()
     
-    #sys.exit(0)
+    sys.exit(0)
 
     play_flag = True
     while play_flag:

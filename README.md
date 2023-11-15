@@ -19,13 +19,16 @@ Use W,A,S,D and the mouse to move around. "E" can open doors if you are facing t
  * blue-ish squares are water - Bubba hates water
 
 "I" will turn you invisible if you have the invisibility ring.
-
+Arrow keys can zoom around the map.  The "fog of war" hides areas until they are found or a spell is activated.
 
 
 
 ## To Do
 
-Instructions on map making and customizing the monsters, treasures and traps. 
+ - [ ] Bubba increase level
+ - [ ] Instructions on map making and customizing the monsters, treasures and traps. 
+ - [ ] scale everything (beasts, player, treasure, traps) when the grid size changes (+/- keys).
+
 
 ## Developer Notes
 
@@ -34,6 +37,10 @@ The map, items and monsters are all customizable.  The first map is for testing 
 I wanted to see what it took to create a game where the character and monsters were constrained by the boundaries of walls.  The monster intellegence is very basic.  I'd like to do something simple like this using a low-poly style graphics with better animation.
 
 The code needs to be cleaned up and put into more files.
+
+I am impressed with the speed it runs given how many things I do in the main loop.
+
+
 
 ## Credits
 
