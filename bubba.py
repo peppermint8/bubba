@@ -5,17 +5,6 @@
 Bubba the Beholder
 - A Xarnoz production
 
-Inspired by ...
-Temple of ROM 
-Rick Adams - 1982 - Temple of ROM
-chalace - blue
-ring
-cup - red
-red gem
-crown
-sphere
-https://github.com/yggdrasilradio/templeofrom/blob/develop/map/map.gif
-
 
 To do
 - level up
@@ -27,21 +16,6 @@ To do
 cell size changes
 - need to re-size everything
 
-
-https://www.flaticon.com/search?word=monsters
-Freepik
-Iconikar
-IconMarketPx
-redempticon
-Lovedat
-Xinh
-pongsakored
-
-https://www.img2go.com/
-
-
-
-lamentations
 """
 
 import sys
@@ -537,12 +511,10 @@ def main(screen, screen_x, screen_y, dx, dy):
 
     tele_cnt = 0
     trap_cnt = 0
-
+    
     for yi in range(dy):
         for xi in range(dx):
             tile = chr(dungeon[xi][yi])
-
-
 
             # teleporter
             if tile == "@":
@@ -732,7 +704,9 @@ def main(screen, screen_x, screen_y, dx, dy):
     lightning_clr = map_json.get("colors", {}).get("lightning_color", default_color)
     fire_clr = map_json.get("colors", {}).get("fire_color", default_color)
     fire_clr2 = map_json.get("colors", {}).get("fire_color_hilite", default_color)
-
+    rock_clr = map_json.get("colors", {}).get("rock_color", default_color)
+    arrow_clr = map_json.get("colors", {}).get("arrow_color", default_color)
+    ice_clr = map_json.get("colors", {}).get("ice_color", default_color)
     # status bar stuff
     status_clr = map_json.get("colors", {}).get("status_bar_background_color", default_color)
     text_clr = map_json.get("colors", {}).get("status_bar_text_color", default_color)
@@ -1256,10 +1230,10 @@ def main(screen, screen_x, screen_y, dx, dy):
 
             if mf:
                 if s.id == "rock":
-                    pygame.draw.circle(bg, (255,255,255), (s.x+xoff, s.y+yoff), 4, 0)
+                    pygame.draw.circle(bg, rock_clr, (s.x+xoff, s.y+yoff), 4, 0)
                 if s.id == "arrow":
-                    pygame.draw.circle(bg, (192, 192, 192), (s.x+xoff, s.y+yoff), 3, 0)
-                    pygame.draw.lines(bg, (192, 192, 192), False, ((s.x0+xoff, s.y0+yoff), (s.x+xoff, s.y+yoff)), 5)
+                    pygame.draw.circle(bg, arrow_clr, (s.x+xoff, s.y+yoff), 3, 0)
+                    pygame.draw.lines(bg, arrow_clr, False, ((s.x0+xoff, s.y0+yoff), (s.x+xoff, s.y+yoff)), 5)
                     s.x0 = s.x
                     s.y0 = s.y                    
                 if s.id == "lightning":
@@ -1322,10 +1296,10 @@ def main(screen, screen_x, screen_y, dx, dy):
                         # ex2 = ex + (es - random.random() * es * 2)
                         # ey2 = ey + (es - random.random() * es * 2)
 
-                        pygame.draw.lines(bg, (128,255,255), False, ((e.x+xoff,e.y+yoff),(e.x+xoff+xtr,e.y+yoff+ytr)), 3)
+                        pygame.draw.lines(bg, ice_clr, False, ((e.x+xoff,e.y+yoff),(e.x+xoff+xtr,e.y+yoff+ytr)), 3)
 
                 if e.id in ("arrow", "rock"):
-                    pygame.draw.circle(bg, (255,255,255), (e.x+xoff, e.y+yoff), e.time+1, 0)
+                    pygame.draw.circle(bg, arrow_clr, (e.x+xoff, e.y+yoff), e.time+1, 0)
                 if e.id in ("green", "acid"):
                     pygame.draw.circle(bg, shot_clr, (e.x+xoff, e.y+yoff), e.time+3, 0)
                 if e.id in ("fire", "fireball"):
@@ -1401,8 +1375,11 @@ def main(screen, screen_x, screen_y, dx, dy):
             pygame.draw.rect(bg, empty_clr, [15 + txt_xy[0] + txt_xy[2] + h0, txt_xy[1], h1, txt_xy[3]])
             pygame.draw.rect(bg, border_clr, [15 + txt_xy[0] + txt_xy[2], txt_xy[1], bar_px, txt_xy[3]], 2)
             hp_txt = status_font.render(f"{bubba.hp} / {bubba.hp_max}", 1, text_clr)
-            txt_xy = hp_txt.get_rect(topleft=(hp_x+bar_px // 2, screen_y+txt_y+4))
-            bg.blit(hp_txt, txt_xy)
+            txt_xy2 = hp_txt.get_rect() #topleft=(hp_x+bar_px // 2, screen_y+txt_y+4))
+            txt_xy2[0] = 15 + txt_xy[0] + txt_xy[2] + (bar_px - txt_xy2[2]) // 2
+            txt_xy2[1] = screen_y + txt_y + 4
+            bg.blit(hp_txt, txt_xy2)
+            #pygame.draw.rect(bg, (0,0,255), txt_xy2, 1)
 
             mana_text = game_font.render("Mana:", 1, text_clr)
             txt_xy = mana_text.get_rect(topleft=(mana_x, screen_y+txt_y))
@@ -1415,16 +1392,11 @@ def main(screen, screen_x, screen_y, dx, dy):
             pygame.draw.rect(bg, border_clr, [15 + txt_xy[0] + txt_xy[2], txt_xy[1], bar_px, txt_xy[3]], 2)
             
             mana_txt = status_font.render(f"{int(bubba.mana)} / {bubba.mana_max}", 1, text_clr)
-            
-            #txt_xy = mana_txt.get_rect(topleft=(mana_x+bar_px //2, screen_y+txt_y+4))
             txt_xy2 = mana_txt.get_rect() #topleft=(mana_x+bar_px //2, screen_y+txt_y+4))
-            print(txt_xy2)
-            txt_xy2[0] = (15 + txt_xy[0] + txt_xy[2])
+            txt_xy2[0] = 15 + txt_xy[0] + txt_xy[2] + (bar_px - txt_xy2[2]) // 2
             txt_xy2[1] = screen_y + txt_y + 4
             bg.blit(mana_txt, txt_xy2)
-            #pygame.draw.rect(bg, (0,0,0), [txt_xy[0], txt_xy[1], txt_xy[2], txt_xy[3]])
-            #bg.blit(mana_text, txt_xy)                                  
-            #pygame.draw.rect(bg, (0,0,0), [15 + bubba.e_max + txt_xy[0] + txt_xy[2], txt_xy[1], bubba.mana_max - bubba.mana - e1, txt_xy[3]])
+
 
             # key count    
             key_text = game_font.render(f"Keys: {bubba.key_cnt}", 1, text_clr)
