@@ -432,7 +432,7 @@ def main(screen, screen_x, screen_y, dx, dy):
     
     fog_flag = True
 
-    background_color = map_json.get("background_color", convert_color("#000000"))
+    background_color = map_json.get("colors", {}).get("background_color", convert_color("#000033"))
   
 
     gs = map_json.get("grid_size", 55)
@@ -735,7 +735,7 @@ def main(screen, screen_x, screen_y, dx, dy):
     grid_flag = map_json.get("show_grid", True)
     invisible_flag = False
     done = False
-
+    
     # -----------------------------------------------[ loop ]
     
     while not done:
@@ -958,10 +958,28 @@ def main(screen, screen_x, screen_y, dx, dy):
                             bubba.dmg_bonus = 1.25
                         
                         else:
-                            # add attribute
+                            
+                            # if found scroll, increase damage by 5
+                            if trs.special == "lightning":
+                                if hasattr(bubba, "lightning"):
+                                    if bubba.lightning:
+                                        # assume weapon 2 is lightning
+                                        bubba.weapon_dmg_2 = [c + 5 for c in bubba.weapon_dmg_2]
+                                        print("new damage: {}".format(bubba.weapon_dmg_2))
+                            if trs.special == "fireball":
+                                if hasattr(bubba, "fireball"):
+                                    if bubba.fireball:
+                                    
+                                        bubba.weapon_dmg_3 = [c + 5 for c in bubba.weapon_dmg_3]
+                                        print("new damage: {}".format(bubba.weapon_dmg_3))
+
+                            # set attribute value
                             setattr(bubba, trs.special, True)
                             print("added power: {}".format(trs.special))    
                             print("flag: {}".format(getattr(bubba, trs.special)))
+
+                            
+
 
                         if trs.text:                        
                             effect = Player(0, 0, 0)
@@ -1610,7 +1628,12 @@ def main(screen, screen_x, screen_y, dx, dy):
                         bubba.key_cnt -= 1
                         dungeon[bubba.xi + xx0][bubba.yi + yy0] = 0
                     else:
-                        print("Bubba needs a key")
+
+                        effect = Player(0, 0, 0)
+                        effect.id = "text"
+                        effect.text = "Bubba needs a key"
+                        effect.time = effect.time_max = 30
+                        effect_list.append(effect)
 
         if keypress[pygame.K_UP]: 
             if yoff < 350:
@@ -1688,7 +1711,7 @@ def dungeon_wall(x, y, **kwargs):
 
 def update_fog(x, y, max_x, max_y):
 
-    f = 7
+    f = 5 # 5x5
     x0 = x - f
     x1 = x + f
     y0 = y - f

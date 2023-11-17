@@ -67,13 +67,17 @@ def random_name():
 
     c = ["w", "r", "t", "y", "p", "l", "k", "j", "h", "g", "f", "d", "s", "z", "x", "c", "v", "b", "n", "m", 
     "tr", "th", "sl", "ch", "fl", "br", "dr", "pr", "gh", "gr", "st", "sc", "sp", "wr", "fr", "qu"]
-    v = ["a", "e", "i", "o", "u", "oo", "ou", "oa", "ie"] #, "y"] # utf-8?
+    v = ["a", "e", "ae", "i", "o", "u", "oo", "ou", "oa", "ie"] #, "y"] # utf-8?
+    e = ["y", "e", "st", "er"]
     nombre = "" #unknown"
-    n = random.choice([3, 4, 4, 4, 5, 5, 5, 6, 7, 8, 3])
+    n = random.choice([3, 4, 4, 4, 5, 5, 5, 6, 7, 8, 3, 6, 2, 5, 3, 4, 3])
     for i in range(0, n):
         if i % 2 == 0:
             nombre += random.choice(c)
         else:
             nombre += random.choice(v)
+    
+    if n % 2 == 0:
+        nombre += random.choice(e)
 
     return nombre.title()
